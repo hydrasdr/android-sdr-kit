@@ -67,7 +67,7 @@ git clone https://github.com/AlexandreRouma/hackrf
 
 git clone https://github.com/AlexandreRouma/rtl-sdr
 
-git clone https://github.com/hydrasdr/rfone_host
+git clone https://github.com/hydrasdr/hydrasdr-host
 
 wget https://www.sdrpp.org/libxml2-2.9.14.tar.xz
 tar -xvf libxml2-2.9.14.tar.xz
@@ -284,7 +284,7 @@ build_libad9361 arm64-v8a
 # Build libhydrasdr
 build_libhydrasdr() { # [android_abi]
     echo "===================== libhydrasdr ($1) ====================="
-    cd rfone_host
+    cd hydrasdr-host
     mkdir -p build_$1 && cd build_$1
     cmake $(gen_cmake_args $1) $(gen_cmake_libusb_args $1) ..
     make $MAKEOPTS
