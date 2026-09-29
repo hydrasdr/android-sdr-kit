@@ -25,7 +25,7 @@ gen_cmake_args() { # [android_abi]
 }
 
 gen_cmake_libusb_args() { # [android_abi]
-    echo -DLIBUSB_LIBRARIES=$SDR_KIT_ROOT/$1/lib/libusb1.0.so -DLIBUSB_INCLUDE_DIRS=$SDR_KIT_ROOT/$1/include -DLIBUSB_INCLUDE_DIR=$SDR_KIT_ROOT/$1/include -DLIBUSB_FOUND=1 -DLIBUSB_VERSION=1.0.25
+    echo -DLIBUSB_LIBRARIES=$SDR_KIT_ROOT/$1/lib/libusb1.0.so -DLIBUSB_INCLUDE_DIRS=$SDR_KIT_ROOT/$1/include -DLIBUSB_INCLUDE_DIR=$SDR_KIT_ROOT/$1/include -DLIBUSB_FOUND=1 -DLIBUSB_VERSION=1.0.30
 }
 
 gen_cmake_fftw_args() { # [android_abi]
@@ -53,21 +53,17 @@ wget https://github.com/drowe67/codec2-dev/archive/refs/tags/v1.0.5.zip
 7z x v1.0.5.zip
 mv codec2-dev-1.0.5 codec2
 
-wget https://github.com/libusb/libusb/releases/download/v1.0.25/libusb-1.0.25.tar.bz2
-tar -xvf libusb-1.0.25.tar.bz2
-mv libusb-1.0.25 libusb
+wget https://github.com/libusb/libusb/releases/download/v1.0.30/libusb-1.0.30.tar.bz2
+tar -xvf libusb-1.0.30.tar.bz2
+mv libusb-1.0.30 libusb
 
 git clone --recurse-submodules https://github.com/gnuradio/volk
-
-git clone https://github.com/airspy/airspyhf
-
-git clone https://github.com/airspy/airspyone_host
 
 git clone https://github.com/AlexandreRouma/hackrf
 
 git clone https://github.com/AlexandreRouma/rtl-sdr
 
-git clone https://github.com/hydrasdr/hydrasdr-host
+git clone --depth 1 --branch "${HYDRASDR_HOST_REF:-v1.1.3}" https://github.com/hydrasdr/hydrasdr-host
 
 wget https://www.sdrpp.org/libxml2-2.9.14.tar.xz
 tar -xvf libxml2-2.9.14.tar.xz
@@ -173,36 +169,6 @@ build_volk x86
 build_volk x86_64
 build_volk armeabi-v7a
 build_volk arm64-v8a
-
-# Build libairspyhf
-build_libairspyhf() { # [android_abi]
-    echo "===================== libairspyhf ($1) ====================="
-    cd airspyhf
-    mkdir -p build_$1 && cd build_$1
-    cmake $(gen_cmake_args $1) $(gen_cmake_libusb_args $1) ..
-    make $MAKEOPTS
-    make DESTDIR=$SDR_KIT_ROOT/$1 install
-    cd ../../
-}
-build_libairspyhf x86
-build_libairspyhf x86_64
-build_libairspyhf armeabi-v7a
-build_libairspyhf arm64-v8a
-
-# Build libairspy
-build_libairspy() { # [android_abi]
-    echo "===================== libairspy ($1) ====================="
-    cd airspyone_host
-    mkdir -p build_$1 && cd build_$1
-    cmake $(gen_cmake_args $1) $(gen_cmake_libusb_args $1) ..
-    make $MAKEOPTS
-    make DESTDIR=$SDR_KIT_ROOT/$1 install
-    cd ../../
-}
-build_libairspy x86
-build_libairspy x86_64
-build_libairspy armeabi-v7a
-build_libairspy arm64-v8a
 
 # Build libhackrf
 build_libhackrf() { # [android_abi]
